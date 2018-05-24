@@ -1,0 +1,9 @@
+{
+  "name": "@brillout/format-text",
+  "version": "0.1.0",
+  "dependencies": {},
+  "repository": "github:brillout/format-text",
+  "publishConfig": {
+    "access": "public"
+  }
+}
