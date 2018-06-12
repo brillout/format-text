@@ -20,9 +20,14 @@ function tableFormat(rows, {padding=2, indent='  '}={}) {
         let line = indent;
         cells.forEach((cell, columnNumber) => {
             const colWidth = columnWidths[columnNumber];
-            let cellStr = new Array(colWidth+padding).fill(' ').join('');
-            cellStr = cell + cellStr.slice(cell.length);
-            line += cellStr;
+            const paddingRight = (
+                 columnNumber===cells.length-1 ? (
+                    ''
+                 ) : (
+                     new Array(colWidth+padding).fill(' ').join('').slice(cell.length)
+                 )
+            );
+            line += cell + paddingRight;
         });
         lines.push(line);
     });
