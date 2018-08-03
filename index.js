@@ -1,3 +1,5 @@
+const assert_warning = require('reassert/warning');
+
 module.exports = {tableFormat, titleFormat};
 
 function tableFormat(rows, {padding=2, indent='  '}={}) {
@@ -7,7 +9,7 @@ function tableFormat(rows, {padding=2, indent='  '}={}) {
         cells.forEach((cell, columnNumber) => {
             columnWidths[columnNumber] = (
                 Math.max(
-                    cell.length,
+                    getStringWidth(cell),
                     columnWidths[columnNumber]||0
                 )
             );
@@ -20,11 +22,12 @@ function tableFormat(rows, {padding=2, indent='  '}={}) {
         let line = indent;
         cells.forEach((cell, columnNumber) => {
             const colWidth = columnWidths[columnNumber];
+            const isLastColumn = columnNumber===cells.length-1;
             const paddingRight = (
-                 columnNumber===cells.length-1 ? (
+                 isLastColumn ? (
                     ''
                  ) : (
-                     new Array(colWidth+padding).fill(' ').join('').slice(cell.length)
+                     getBar(colWidth+padding, ' ').slice(getStringWidth(cell))
                  )
             );
             line += cell + paddingRight;
@@ -35,24 +38,16 @@ function tableFormat(rows, {padding=2, indent='  '}={}) {
     return lines.join('\n');
 }
 
-function titleFormat(title) {
+function titleFormat(title, {padding=3}={}) {
     const min_bar_length = 40;
     title = ' '+title+' ';
-    const bar_length = Math.max(min_bar_length, title.length+6);
-    const margin = Math.floor((bar_length - title.length) / 2);
-    const bar = new Array(bar_length).fill('*').join('');
-    const title_bar = (
-        bar
-        .split('')
-        .map((char_, pos) => {
-            const pos_in_title = pos-margin;
-            if( 0 <= pos_in_title && pos_in_title < title.length ) {
-                return title.split('')[pos_in_title];
-            }
-            return char_;
-        })
-        .join('')
-    );
+    const titleWidth = getStringWidth(title);
+    const barWidth = Math.max(min_bar_length, titleWidth+padding*2);
+    const stringWidth = require('string-width');
+    const leftWidth = Math.floor((barWidth - titleWidth) / 2);
+    const bar = getBar(barWidth);
+    const title_bar = getBar(leftWidth) + title + getBar(barWidth - leftWidth - titleWidth);
+    assert_warning(getStringWidth(bar)===getStringWidth(title_bar));
     return (
         [
             bar,
@@ -60,4 +55,18 @@ function titleFormat(title) {
             bar,
         ].join('\n')
     );
+}
+function getStringWidth(str) {
+    if( ! isNodejs() ) {
+        return str.length;
+    }
+    const stringWidth = eval('require')('string-width');
+    return stringWidth(str);
+}
+function isNodejs() {
+    return typeof process !== "undefined" && typeof window === "undefined";
+}
+
+function getBar(barWidth, filler='*') {
+    return new Array(barWidth).fill(filler).join('');
 }

@@ -1,7 +1,10 @@
 {
   "name": "@brillout/format-text",
-  "version": "0.1.1",
-  "dependencies": {},
+  "version": "0.1.2",
+  "dependencies": {
+    "reassert": "^1.1.14",
+    "string-width": "^2.1.1"
+  },
   "repository": "github:brillout/format-text",
   "publishConfig": {
     "access": "public"
