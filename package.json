@@ -1,6 +1,6 @@
 {
   "name": "@brillout/format-text",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "dependencies": {
     "reassert": "^1.1.14",
     "string-width": "^2.1.1"

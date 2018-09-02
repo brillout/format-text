@@ -1,5 +1,3 @@
-const assert_warning = require('reassert/warning');
-
 module.exports = {tableFormat, titleFormat};
 
 function tableFormat(rows, {padding=2, indent='  '}={}) {
@@ -39,6 +37,9 @@ function tableFormat(rows, {padding=2, indent='  '}={}) {
 }
 
 function titleFormat(title, {padding=3}={}) {
+    // resolve cyclic dependency reassert => @brillout/format-text => reassert
+    const assert_warning = require('reassert/warning');
+
     const min_bar_length = 40;
     title = ' '+title+' ';
     const titleWidth = getStringWidth(title);
